@@ -7,12 +7,12 @@
 //  (dados salvos só no navegador, para testar).
 // =====================================================================
 export const firebaseConfig = {
-  apiKey: "COLE_AQUI_SUA_API_KEY",
-  authDomain: "seu-projeto.firebaseapp.com",
-  projectId: "seu-projeto",
-  storageBucket: "seu-projeto.appspot.com",
-  messagingSenderId: "000000000000",
-  appId: "1:000000000000:web:0000000000000000"
+  apiKey: "AIzaSyDvv78iRmZ0FLNQ3zHFhzF7nFca3wYXAA8",
+  authDomain: "escala-midia-79c69.firebaseapp.com",
+  projectId: "escala-midia-79c69",
+  storageBucket: "escala-midia-79c69.firebasestorage.app",
+  messagingSenderId: "512118759319",
+  appId: "1:512118759319:web:bf2f5f228ffee69cbe2ed2"
 };
 
 // Nome que aparece no sistema
