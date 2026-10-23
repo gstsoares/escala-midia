@@ -283,3 +283,8 @@ tr:last-child td{border-bottom:0}
   .side-user .av.xl{width:72px;height:72px;font-size:26px}
   .side-foot{position:sticky;bottom:0;background:var(--side);padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 }
+
+/* Sair como opcao da lista do menu (aparece em qualquer celular) */
+.side nav a.nav-sair{margin-top:10px;border-top:1px solid var(--side-line);border-radius:0 0 14px 14px;padding-top:14px;color:#ff9e94}
+.side nav a.nav-sair .ic{color:#ff9e94}
+@media (max-width:760px){ .side-foot .btn{display:none} .side nav{padding-bottom:110px} }

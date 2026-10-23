@@ -68,6 +68,7 @@ const IC = {
   check: svg('<rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 12l3 3 5-6"/>'),
   olho: svg('<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>'),
   eu: svg('<circle cx="12" cy="8" r="4"/><path d="M4 21c1-4.4 4-6.5 8-6.5s7 2.1 8 6.5"/>'),
+  sair: svg('<path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3"/><path d="M10 17l5-5-5-5"/><path d="M15 12H4"/>'),
 };
 
 // ============================ DADOS ============================
@@ -180,7 +181,8 @@ function renderSide() {
   const me = pessoa(eu().id) || eu();
   $('#sideUser').innerHTML = `<span class="ring">${av(me, 'xl')}</span><div class="side-name">${esc(me.nome)}</div><div class="side-role">${ehMaster() ? 'Líder · acesso total' : esc(AREAS[me.area] || '')}</div>`;
   $('#nav').innerHTML = navItens().map(n => typeof n === 'string' ? `<div class="sep">${esc(n)}</div>` :
-    `<a data-act="ir" data-v="${n[0]}" class="${U.view === n[0] ? 'on' : ''}" ${U.view === n[0] ? 'aria-current="page"' : ''}><span class="ic">${n[2]}</span>${esc(n[1])}${n[3] ? `<span class="nb">${n[3]}</span>` : ''}</a>`).join('');
+    `<a data-act="ir" data-v="${n[0]}" class="${U.view === n[0] ? 'on' : ''}" ${U.view === n[0] ? 'aria-current="page"' : ''}><span class="ic">${n[2]}</span>${esc(n[1])}${n[3] ? `<span class="nb">${n[3]}</span>` : ''}</a>`).join('')
+    + `<a data-act="sair" class="nav-sair"><span class="ic">${IC.sair}</span>Sair da conta</a>`;
   $('#brandMini').textContent = store.cfg().ministerio || MINISTERIO;
   $('#demoTag').classList.toggle('hidden', !store.demo);
 }
@@ -313,7 +315,8 @@ function vPerfil() {
   return `<div class="cols"><section class="card"><h2>Sua foto</h2><div class="photo-pick"><span class="ring" id="fotoPrev">${av(me, 'xl')}</span>
     <div class="stack" style="gap:8px"><label class="btn file-btn">Escolher foto<input type="file" accept="image/*" data-chg="minhaFoto" aria-label="Escolher foto"></label>
     ${me.foto ? '<button class="btn link" data-act="tirarMinhaFoto">Remover foto</button>' : ''}<span class="muted small">A foto é recortada em círculo e reduzida sozinha.</span></div></div>
-    <dl class="info"><div><dt>Nome</dt><dd>${esc(me.nome)}</dd></div><div><dt>Equipe</dt><dd>${AREAS[me.area]}</dd></div><div><dt>Acesso</dt><dd>${ehMaster() ? 'Líder (vê tudo)' : 'Integrante'}</dd></div></dl></section>
+    <dl class="info"><div><dt>Nome</dt><dd>${esc(me.nome)}</dd></div><div><dt>Equipe</dt><dd>${AREAS[me.area]}</dd></div><div><dt>Acesso</dt><dd>${ehMaster() ? 'Líder (vê tudo)' : 'Integrante'}</dd></div></dl>
+    <div class="row"><button class="btn danger" data-act="sair">Sair da conta</button></div></section>
   <section class="card"><h2>Trocar meu PIN</h2><form id="fPin" class="stack">
     <div class="field"><label for="pAtual">PIN atual</label><input id="pAtual" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></div>
     <div class="grid2"><div class="field"><label for="pNovo">PIN novo</label><input id="pNovo" type="password" inputmode="numeric" maxlength="4" autocomplete="off"></div>
