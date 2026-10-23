@@ -271,3 +271,6 @@ tr:last-child td{border-bottom:0}
   .login-brand h1{font-size:32px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* iPhone: campos com 16px para o Safari nao dar zoom ao digitar */
+@media (max-width:760px){ .field input,.field select,.field textarea,input,select,textarea{font-size:16px} }
