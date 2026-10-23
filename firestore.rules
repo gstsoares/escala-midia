@@ -1,0 +1,64 @@
+rules_version = '2';
+// Regras do Escala da Mídia
+// - A líder (papel "master") lê e grava tudo.
+// - As integrantes só leem os eventos, as escalas PUBLICADAS e as próprias respostas.
+// - Telefones, observações, dias bloqueados, rascunhos e respostas das outras
+//   pessoas ficam só com a líder.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function logado() { return request.auth != null; }
+    function acesso() { return get(/databases/$(database)/documents/acessos/$(request.auth.uid)).data; }
+    function temAcesso() { return logado() && exists(/databases/$(database)/documents/acessos/$(request.auth.uid)); }
+    function master() { return temAcesso() && acesso().papel == 'master'; }
+    function meuPid() { return acesso().pid; }
+    function semConfig() { return !exists(/databases/$(database)/documents/config/app); }
+    // primeiro acesso: só enquanto o sistema ainda não foi configurado
+    function montando() {
+      return logado() && semConfig()
+        && getAfter(/databases/$(database)/documents/acessos/$(request.auth.uid)).data.papel == 'master';
+    }
+
+    // Lista de nomes e fotos aparece na tela de login (antes de entrar)
+    match /pessoas/{pid} {
+      allow read: if true;
+      allow create, delete: if master() || montando();
+      allow update: if master()
+        || (temAcesso() && meuPid() == pid
+            && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['foto']));
+    }
+    match /config/{id} {
+      allow read: if true;
+      allow write: if master() || montando();
+    }
+    match /acessos/{uid} {
+      allow read: if logado() && (request.auth.uid == uid || master());
+      allow write: if master() || (request.auth.uid == uid && montando());
+    }
+    match /privado/{pid} {
+      allow read, write: if master() || montando();
+    }
+    match /meses/{mes} {
+      allow read: if temAcesso();
+      allow write: if master() || montando();
+    }
+    match /eventos/{id} {
+      allow read: if temAcesso();
+      allow write: if master();
+    }
+    match /publicadas/{id} {
+      allow read: if temAcesso();
+      allow write: if master();
+    }
+    match /rascunhos/{id} {
+      allow read, write: if master();
+    }
+    // id = "<mês>_<pessoa>"
+    match /respostas/{id} {
+      allow read: if master() || (temAcesso() && resource.data.pid == meuPid());
+      allow create, update: if master()
+        || (temAcesso() && request.resource.data.pid == meuPid() && id == request.resource.data.mes + '_' + meuPid());
+      allow delete: if master();
+    }
+  }
+}
